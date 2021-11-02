@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 14.0,
             ),
             Text(
-              news.title,
+              news.newTitle,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,

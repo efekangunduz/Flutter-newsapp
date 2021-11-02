@@ -3,9 +3,16 @@ import 'package:newsapp/components/profile_pic.dart';
 import 'package:newsapp/components/profile_menu.dart';
 import 'package:newsapp/service/auth.dart';
 import 'package:newsapp/styles/custom_theme.dart';
+import 'package:newsapp/view/add_new.dart';
+import 'package:newsapp/view/my_account.dart';
+import 'package:newsapp/view/shared_news.dart';
 
-class ProfileScreen extends StatelessWidget {
-  static String routeName = "/profile";
+class ProfileScreen extends StatefulWidget {
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,22 +40,31 @@ class ProfileScreen extends StatelessWidget {
               ProfileMenu(
                 text: "My Account",
                 icon: Icons.person,
-                press: () => {},
+                press: () => {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MyAccount(title: 'My Account'))),
+                },
               ),
               ProfileMenu(
-                text: "Comments",
+                text: "My Comments",
                 icon: Icons.comment,
                 press: () {},
               ),
               ProfileMenu(
-                text: "Settings",
-                icon: Icons.settings,
-                press: () {},
+                text: "Add New",
+                icon: Icons.add_box,
+                press: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => AddNew()));
+                },
               ),
               ProfileMenu(
                 text: "Shared News",
                 icon: Icons.article,
-                press: () {},
+                press: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SharedNews()));
+                },
               ),
               ProfileMenu(
                 text: "Log Out",

@@ -9,11 +9,13 @@ class BaseView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: this.appBar != null ? this.appBar : null,
-        body: Padding(
-          padding: context.paddingLow,
-          child: this.child,
-        ));
+    return SafeArea(
+      child: Scaffold(
+          appBar: this.appBar != null ? this.appBar : null,
+          body: Padding(
+            padding: context.paddingLow,
+            child: this.child,
+          )),
+    );
   }
 }

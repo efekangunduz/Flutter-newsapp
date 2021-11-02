@@ -1,10 +1,60 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 
-class ProfilePic extends StatelessWidget {
+class ProfilePic extends StatefulWidget {
   const ProfilePic({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<ProfilePic> createState() => _ProfilePicState();
+}
+
+class _ProfilePicState extends State<ProfilePic> {
+  late File addFile;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String? downloadUrl;
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      takePhoto();
+    });
+  }
+
+  takePhoto() async {
+    String connect = await FirebaseStorage.instance
+        .ref()
+        .child('profilephotos')
+        .child(auth.currentUser!.uid)
+        .child('profilPhoto.png')
+        .getDownloadURL();
+    setState(() {
+      downloadUrl = connect;
+    });
+  }
+
+  addOnCamera() async {
+    var uploadFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    setState(() {
+      addFile = File(uploadFile!.path);
+    });
+
+    Reference referencePath = FirebaseStorage.instance
+        .ref()
+        .child('profilephotos')
+        .child(auth.currentUser!.uid)
+        .child('profilPhoto.png');
+    UploadTask addTask = referencePath.putFile(addFile);
+    String url = await (await addTask).ref.getDownloadURL();
+    setState(() {
+      downloadUrl = url;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +66,16 @@ class ProfilePic extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           CircleAvatar(
-            backgroundImage: AssetImage("assets/1.jpg"),
+            child: ClipOval(
+              child: downloadUrl == null
+                  ? Image.asset('assets/profilePhoto.png')
+                  : Image.network(
+                      downloadUrl!,
+                      fit: BoxFit.fill,
+                      width: 150,
+                      height: 150,
+                    ),
+            ),
           ),
           Positioned(
             right: -16,
@@ -33,7 +92,9 @@ class ProfilePic extends StatelessWidget {
                   primary: appBarColor,
                   backgroundColor: appBarColor,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  addOnCamera();
+                },
                 child: Icon(
                   Icons.camera,
                   color: primaryColor,

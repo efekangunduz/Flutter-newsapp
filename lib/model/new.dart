@@ -1,5 +1,5 @@
 class News {
-  String title;
+  String newTitle;
   String author;
   String authorImage;
   String description;
@@ -10,7 +10,7 @@ class News {
   String comments;
 
   News(
-      this.title,
+      this.newTitle,
       this.author,
       this.authorImage,
       this.description,

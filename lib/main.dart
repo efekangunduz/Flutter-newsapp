@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newsapp/routes/routes.dart';
 import 'package:newsapp/view/home.dart';
-import 'package:newsapp/view/profile.dart';
 import 'package:newsapp/view/register.dart';
 import 'package:newsapp/view/splash.dart';
 

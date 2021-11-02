@@ -27,7 +27,7 @@ class _NewsDetailState extends State<NewsDetail> {
               onPressed: () => Navigator.of(context).pop(),
             ),
             title: Text(
-              widget.news.title,
+              widget.news.newTitle,
               style: TextStyle(color: blackColor),
             ),
             backgroundColor: primaryColor),
@@ -89,7 +89,7 @@ class _NewsDetailState extends State<NewsDetail> {
                 height: 1,
               ),
               Text(
-                widget.news.title,
+                widget.news.newTitle,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 18),
               ),

@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
             widget.title,
             style: TextStyle(color: Colors.black),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: primaryColor,
         ),
         body: Padding(
           padding: PaddingConstants.instance.paddingLeftRightNormal,
