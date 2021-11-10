@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:newsapp/service/news.dart';
 import 'package:newsapp/styles/custom_theme.dart';
+import 'package:newsapp/view/add_new_photo.dart';
 
 class AddNewForm extends StatefulWidget {
   _AddNewFormState createState() => _AddNewFormState();
@@ -7,8 +9,10 @@ class AddNewForm extends StatefulWidget {
 
 class _AddNewFormState extends State<AddNewForm> {
   String newTitle = '';
+  String details = '';
   String description = '';
   String source = '';
+  DateTime publishedAt = DateTime.now();
 
   final _formkey = GlobalKey<FormState>();
   @override
@@ -58,7 +62,7 @@ class _AddNewFormState extends State<AddNewForm> {
                   labelText: 'Description',
                 ),
                 validator: (value) {
-                  if (value.toString().length < 15) {
+                  if (value.toString().length < 6) {
                     return 'Description is too short';
                   } else {
                     return null;
@@ -79,7 +83,6 @@ class _AddNewFormState extends State<AddNewForm> {
                   ),
                   labelText: 'Source',
                 ),
-                obscureText: true,
                 validator: (value) {
                   if (value.toString().length < 6) {
                     return 'Source is too short';
@@ -119,16 +122,25 @@ class _AddNewFormState extends State<AddNewForm> {
                     return "Empty value";
                   }
                 },
-              ),
-              TextButton(
-                child: Text('Add Photo'),
-                onPressed: () {},
+                onSaved: (value) {
+                  setState(() {
+                    details = value!;
+                  });
+                },
               ),
               TextButton(
                 onPressed: () {
                   if (_formkey.currentState!.validate()) {
                     _formkey.currentState!.save();
                   }
+                  addNew(
+                      description: description,
+                      details: details,
+                      newTitle: newTitle,
+                      publishedAt: publishedAt,
+                      source: source);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => AddNewPhoto(title: newTitle)));
                 },
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(

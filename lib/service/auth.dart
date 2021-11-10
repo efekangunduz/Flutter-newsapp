@@ -1,6 +1,36 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:async';
+
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
+
+uploadPhoto() async {
+  // only add default photo from assets
+  Future<File> getImageFileFromAssets(String path) async {
+    final byteData = await rootBundle.load('assets/$path');
+
+    final file = File('${(await getTemporaryDirectory()).path}/$path');
+    await file.writeAsBytes(byteData.buffer
+        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file;
+  }
+
+  File defaultPhoto = await getImageFileFromAssets('profilePhoto.png');
+  FirebaseAuth auth = FirebaseAuth.instance;
+  Reference referencePath = FirebaseStorage.instance
+      .ref()
+      .child('profilephotos')
+      .child(auth.currentUser!.uid)
+      .child('profilPhoto.png');
+  UploadTask addTask = referencePath.putFile(defaultPhoto);
+  String url = await (await addTask).ref.getDownloadURL();
+}
 
 signup(String email, String password, String username) async {
   try {
@@ -10,6 +40,7 @@ signup(String email, String password, String username) async {
     User? updateUser = FirebaseAuth.instance.currentUser;
     updateUser!.updateDisplayName(username);
     userSetup(username);
+    uploadPhoto();
     print('///////// Success Register ////////////');
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {

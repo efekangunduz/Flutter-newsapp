@@ -16,7 +16,9 @@ class _RegisterFormState extends State<RegisterForm> {
   String password = '';
   String username = '';
   bool isLogin = false;
+
   final _formkey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
