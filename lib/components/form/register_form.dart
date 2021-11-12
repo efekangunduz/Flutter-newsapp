@@ -117,7 +117,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         print('User is currently signed out!');
                       } else {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => MyHomePage(title: 'Home')));
+                            builder: (context) => MyHomePage()));
                       }
                     });
                   }

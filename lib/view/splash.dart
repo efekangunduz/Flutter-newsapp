@@ -28,10 +28,8 @@ class _SplashState extends State<Splash> {
             (route) => false);
       } else {
         // user already logged in ==> Home Screen
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => MyHomePage(title: 'Home')),
-            (route) => false);
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (_) => MyHomePage()), (route) => false);
       }
     });
   }

@@ -12,7 +12,7 @@ class _AddNewFormState extends State<AddNewForm> {
   String details = '';
   String description = '';
   String source = '';
-  DateTime publishedAt = DateTime.now();
+  String publishedAt = DateTime.now().toString();
 
   final _formkey = GlobalKey<FormState>();
   @override

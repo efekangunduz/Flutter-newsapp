@@ -20,44 +20,52 @@ class AddNewPhoto extends StatefulWidget {
 }
 
 class _AddNewPhotoState extends State<AddNewPhoto> {
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      getData();
-    });
-  }
-
-  late File addFile;
+  late File addImageFile;
+  late File addVideoFile;
   String uid = auth.currentUser!.uid.toString();
   String displayName = auth.currentUser!.displayName.toString();
-  String? downloadUrl;
-  addOnCamera() async {
+  String? downloadImageUrl;
+  String? downloadVideoUrl;
+  addImageOnCamera() async {
     var uploadFile = await ImagePicker().pickImage(source: ImageSource.camera);
     setState(() {
-      addFile = File(uploadFile!.path);
+      addImageFile = File(uploadFile!.path);
     });
     Reference referencePath = FirebaseStorage.instance
         .ref()
         .child('newphotos')
-        .child(displayName)
         .child(widget.title)
         .child('newPhoto.png');
-    UploadTask addTask = referencePath.putFile(addFile);
+    UploadTask addTask = referencePath.putFile(addImageFile);
     String url = await (await addTask).ref.getDownloadURL();
+
     setState(() {
-      downloadUrl = url;
+      downloadImageUrl = url;
     });
   }
 
-  getData() async {
-    FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    var newsRef = _firestore
-        .collection('News')
-        .doc(displayName)
-        .collection('items')
-        .doc();
-    var response = await newsRef.get();
-    var map = response.data();
+  addVideoOnCamera() async {
+    var uploadFile = await ImagePicker().pickVideo(source: ImageSource.camera);
+    setState(() {
+      addVideoFile = File(uploadFile!.path);
+    });
+    Reference referencePath = FirebaseStorage.instance
+        .ref()
+        .child('newvideos')
+        .child(widget.title)
+        .child('newVideo.mp4');
+    UploadTask addTask = referencePath.putFile(addVideoFile);
+    String url = await (await addTask).ref.getDownloadURL();
+    setState(() {
+      downloadVideoUrl = url;
+    });
+  }
+
+  addImageVideoUrlOnFirestore() async {
+    CollectionReference news = FirebaseFirestore.instance.collection('News');
+    await news
+        .doc(widget.title)
+        .update({'photoUrl': downloadImageUrl, 'videoUrl': downloadVideoUrl});
   }
 
   @override
@@ -85,11 +93,27 @@ class _AddNewPhotoState extends State<AddNewPhoto> {
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Form(
-                    child: TextButton(
-                      child: Text('Add Photo'),
-                      onPressed: () {
-                        addOnCamera();
-                      },
+                    child: Column(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            addImageOnCamera();
+                          },
+                          icon: Icon(Icons.camera),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            addVideoOnCamera();
+                          },
+                          icon: Icon(Icons.video_camera_front),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            addImageVideoUrlOnFirestore();
+                          },
+                          icon: Icon(Icons.save),
+                        ),
+                      ],
                     ),
                   ),
                 ),

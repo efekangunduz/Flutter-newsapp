@@ -29,7 +29,7 @@ class NewsApp extends StatelessWidget {
         routes: {
           Routes.splashRoute: (_) => Splash(),
           Routes.signInRoute: (_) => RegisterPage(title: 'Register'),
-          Routes.homeRoute: (_) => MyHomePage(title: 'Home'),
+          Routes.homeRoute: (_) => MyHomePage(),
         });
   }
 }

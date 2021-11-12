@@ -22,11 +22,11 @@ class _ProfilePicState extends State<ProfilePic> {
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      takePhoto();
+      getPhotoUrl();
     });
   }
 
-  takePhoto() async {
+  getPhotoUrl() async {
     String connect = await FirebaseStorage.instance
         .ref()
         .child('profilephotos')
