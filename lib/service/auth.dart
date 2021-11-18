@@ -73,10 +73,47 @@ signout() async {
   print('///// Success Logout //////.');
 }
 
-Future<void> userSetup(String displayName) async {
+Future<void> userSetup(displayName) async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  CollectionReference users = FirebaseFirestore.instance.collection('Users');
+  String uid = auth.currentUser!.uid.toString();
+  bool editor = false;
+  String name = '';
+  String surname = '';
+  String phone = '';
+  DocumentReference documentReferencer = users.doc(displayName);
+
+  Map<String, dynamic> data = <String, dynamic>{
+    'displayName': displayName,
+    'uid': uid,
+    'editor': editor,
+    'name': name,
+    'surname': surname,
+    'phone': phone,
+  };
+
+  await documentReferencer
+      .set(data)
+      .whenComplete(() => print("Users item added to the database"))
+      .catchError((e) => print(e));
+}
+
+//eski userSetup
+Future<void> usersSetup(String displayName) async {
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
   FirebaseAuth auth = FirebaseAuth.instance;
   String uid = auth.currentUser!.uid.toString();
-  users.add({'displayName': displayName, 'uid': uid});
+  bool editor = false;
+  String name = '';
+  String surname = '';
+  String phone = '';
+  users.add({
+    'displayName': displayName,
+    'uid': uid,
+    'editor': editor,
+    'name': name,
+    'surname': surname,
+    'phone': phone,
+  });
   return;
 }

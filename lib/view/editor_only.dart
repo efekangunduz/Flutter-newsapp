@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:newsapp/components/editor_only_content.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/base_view.dart';
 import 'package:newsapp/components/shared_news_content.dart';
 
-class SharedNews extends StatefulWidget {
-  const SharedNews({Key? key}) : super(key: key);
+class EditorOnly extends StatefulWidget {
+  const EditorOnly({Key? key}) : super(key: key);
 
   @override
-  _SharedNewsState createState() => _SharedNewsState();
+  _EditorOnlyState createState() => _EditorOnlyState();
 }
 
-class _SharedNewsState extends State<SharedNews> {
+class _EditorOnlyState extends State<EditorOnly> {
   @override
   Widget build(BuildContext context) {
     return BaseView(
@@ -23,12 +24,12 @@ class _SharedNewsState extends State<SharedNews> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          "Shared News",
+          "Editor Only",
           style: TextStyle(color: blackColor),
         ),
         backgroundColor: primaryColor,
       ),
-      child: SharedNewsContent(),
+      child: EditorOnlyContent(),
     );
   }
 }

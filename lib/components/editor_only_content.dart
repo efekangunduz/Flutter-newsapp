@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:newsapp/constants/border_constant.dart';
 import 'package:newsapp/view/new_details.dart';
 
-class UserInformation extends StatefulWidget {
+class EditorOnlyContent extends StatefulWidget {
   @override
-  _UserInformationState createState() => _UserInformationState();
+  _EditorOnlyContentState createState() => _EditorOnlyContentState();
 }
 
 FirebaseAuth auth = FirebaseAuth.instance;
 
-class _UserInformationState extends State<UserInformation> {
-  final Query _new = FirebaseFirestore.instance.collection('News').where(
-      "displayName",
-      isEqualTo: auth.currentUser!.displayName.toString());
+class _EditorOnlyContentState extends State<EditorOnlyContent> {
+  final Query _new = FirebaseFirestore.instance
+      .collection('News')
+      .where("published", isEqualTo: false);
 
   @override
   Widget build(BuildContext context) {

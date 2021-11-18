@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:newsapp/components/home_content.dart';
+import 'package:newsapp/components/profile_content.dart';
 import 'package:newsapp/routes/routes.dart';
 import 'package:newsapp/view/home.dart';
 import 'package:newsapp/view/register.dart';
@@ -25,6 +27,7 @@ class NewsApp extends StatelessWidget {
             secondary: Colors.orange,
           ),
         ),
+        //home: ProfileContent(),
         home: Splash(),
         routes: {
           Routes.splashRoute: (_) => Splash(),

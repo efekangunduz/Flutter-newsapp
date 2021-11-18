@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newsapp/service/auth.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/base_view.dart';
-import 'package:newsapp/view/home_content.dart';
+import 'package:newsapp/components/home_content.dart';
 import 'package:newsapp/view/profile.dart';
 import 'package:newsapp/view/register.dart';
 
