@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newsapp/constants/padding_constant.dart';
+import 'package:newsapp/service/auth.dart';
 import 'package:newsapp/service/news.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/base_view.dart';
@@ -20,53 +21,10 @@ class AddNewPhoto extends StatefulWidget {
 }
 
 class _AddNewPhotoState extends State<AddNewPhoto> {
-  late File addImageFile;
-  late File addVideoFile;
+  File? addImageFile;
+  File? addVideoFile;
   String uid = auth.currentUser!.uid.toString();
   String displayName = auth.currentUser!.displayName.toString();
-  String? downloadImageUrl;
-  String? downloadVideoUrl;
-  addImageOnCamera() async {
-    var uploadFile = await ImagePicker().pickImage(source: ImageSource.camera);
-    setState(() {
-      addImageFile = File(uploadFile!.path);
-    });
-    Reference referencePath = FirebaseStorage.instance
-        .ref()
-        .child('newphotos')
-        .child(widget.title)
-        .child('newPhoto.png');
-    UploadTask addTask = referencePath.putFile(addImageFile);
-    String url = await (await addTask).ref.getDownloadURL();
-
-    setState(() {
-      downloadImageUrl = url;
-    });
-  }
-
-  addVideoOnCamera() async {
-    var uploadFile = await ImagePicker().pickVideo(source: ImageSource.camera);
-    setState(() {
-      addVideoFile = File(uploadFile!.path);
-    });
-    Reference referencePath = FirebaseStorage.instance
-        .ref()
-        .child('newvideos')
-        .child(widget.title)
-        .child('newVideo.mp4');
-    UploadTask addTask = referencePath.putFile(addVideoFile);
-    String url = await (await addTask).ref.getDownloadURL();
-    setState(() {
-      downloadVideoUrl = url;
-    });
-  }
-
-  addImageVideoUrlOnFirestore() async {
-    CollectionReference news = FirebaseFirestore.instance.collection('News');
-    await news
-        .doc(widget.title)
-        .update({'photoUrl': downloadImageUrl, 'videoUrl': downloadVideoUrl});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,21 +55,15 @@ class _AddNewPhotoState extends State<AddNewPhoto> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            addImageOnCamera();
+                            addImageOnCamera(addImageFile, widget.title);
                           },
                           icon: Icon(Icons.camera),
                         ),
                         IconButton(
                           onPressed: () {
-                            addVideoOnCamera();
+                            addVideoOnCamera(addVideoFile, widget.title);
                           },
                           icon: Icon(Icons.video_camera_front),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            addImageVideoUrlOnFirestore();
-                          },
-                          icon: Icon(Icons.save),
                         ),
                       ],
                     ),

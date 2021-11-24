@@ -97,23 +97,3 @@ Future<void> userSetup(displayName) async {
       .whenComplete(() => print("Users item added to the database"))
       .catchError((e) => print(e));
 }
-
-//eski userSetup
-Future<void> usersSetup(String displayName) async {
-  CollectionReference users = FirebaseFirestore.instance.collection('Users');
-  FirebaseAuth auth = FirebaseAuth.instance;
-  String uid = auth.currentUser!.uid.toString();
-  bool editor = false;
-  String name = '';
-  String surname = '';
-  String phone = '';
-  users.add({
-    'displayName': displayName,
-    'uid': uid,
-    'editor': editor,
-    'name': name,
-    'surname': surname,
-    'phone': phone,
-  });
-  return;
-}
