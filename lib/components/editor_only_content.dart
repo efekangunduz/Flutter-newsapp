@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:newsapp/constants/border_constant.dart';
-import 'package:newsapp/view/new_details.dart';
+import 'package:newsapp/view/new_details_setting.dart';
 
 class EditorOnlyContent extends StatefulWidget {
   @override
@@ -39,7 +39,7 @@ class _EditorOnlyContentState extends State<EditorOnlyContent> {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return NewDetails(
+                      return NewDetailsSetting(
                         newTitle: data['newTitle'],
                         author: data['displayName'],
                         source: data['source'],
@@ -47,6 +47,7 @@ class _EditorOnlyContentState extends State<EditorOnlyContent> {
                         details: data['details'],
                         photoUrl: data['photoUrl'],
                         videoUrl: data['videoUrl'],
+                        published: data['published'].toString(),
                         publishedAt: data['publishedAt'].toString(),
                       );
                     },

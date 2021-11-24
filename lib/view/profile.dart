@@ -64,7 +64,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 text: "My Account",
                 icon: Icons.person,
                 press: () => {
-                  getData(),
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => MyAccount(title: 'My Account'))),
                 },
