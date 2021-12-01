@@ -1,9 +1,5 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:newsapp/service/auth.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 
 class ProfilePic extends StatefulWidget {
@@ -16,43 +12,10 @@ class ProfilePic extends StatefulWidget {
 }
 
 class _ProfilePicState extends State<ProfilePic> {
-  late File addFile;
-  FirebaseAuth auth = FirebaseAuth.instance;
-  String? downloadUrl;
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       getPhotoUrl();
-    });
-  }
-
-  getPhotoUrl() async {
-    String connect = await FirebaseStorage.instance
-        .ref()
-        .child('profilephotos')
-        .child(auth.currentUser!.uid)
-        .child('profilPhoto.png')
-        .getDownloadURL();
-    setState(() {
-      downloadUrl = connect;
-    });
-  }
-
-  addOnCamera() async {
-    var uploadFile = await ImagePicker().pickImage(source: ImageSource.camera);
-    setState(() {
-      addFile = File(uploadFile!.path);
-    });
-
-    Reference referencePath = FirebaseStorage.instance
-        .ref()
-        .child('profilephotos')
-        .child(auth.currentUser!.uid)
-        .child('profilPhoto.png');
-    UploadTask addTask = referencePath.putFile(addFile);
-    String url = await (await addTask).ref.getDownloadURL();
-    setState(() {
-      downloadUrl = url;
     });
   }
 
@@ -94,6 +57,8 @@ class _ProfilePicState extends State<ProfilePic> {
                 ),
                 onPressed: () {
                   addOnCamera();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/home', (Route<dynamic> route) => false);
                 },
                 child: Icon(
                   Icons.camera,

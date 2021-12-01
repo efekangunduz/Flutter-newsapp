@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:newsapp/service/auth.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 
 class AccountForm extends StatefulWidget {
@@ -14,15 +15,6 @@ class _AccountFormState extends State<AccountForm> {
   String name = '';
   String surname = '';
   String phone = '';
-  addUserInfo() async {
-    CollectionReference users = FirebaseFirestore.instance.collection('Users');
-    FirebaseAuth auth = FirebaseAuth.instance;
-    String uid = auth.currentUser!.uid.toString();
-    String displayName = auth.currentUser!.displayName.toString();
-    await users
-        .doc(displayName)
-        .update({'name': name, 'surname': surname, 'phone': phone});
-  }
 
   final _formkey = GlobalKey<FormState>();
   @override
@@ -110,7 +102,9 @@ class _AccountFormState extends State<AccountForm> {
                 onPressed: () {
                   if (_formkey.currentState!.validate()) {
                     _formkey.currentState!.save();
-                    addUserInfo();
+                    addUserInfo(name, surname, phone);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/home', (Route<dynamic> route) => false);
                   }
                 },
                 style: TextButton.styleFrom(

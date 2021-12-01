@@ -2,14 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:newsapp/components/profile_pic.dart';
 import 'package:newsapp/components/profile_menu.dart';
-import 'package:newsapp/service/news.dart';
+import 'package:newsapp/service/auth.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/add_new.dart';
+import 'package:newsapp/view/admin_only.dart';
 import 'package:newsapp/view/editor_only.dart';
 import 'package:newsapp/view/my_account.dart';
 import 'package:newsapp/view/shared_news.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -17,12 +20,14 @@ class ProfileScreen extends StatefulWidget {
 String displayName = auth.currentUser!.displayName.toString();
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  var documentStream;
   bool data = false;
+  bool data2 = false;
+  var documentStream;
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       getData();
+      getData2();
     });
   }
 
@@ -33,6 +38,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .get();
     setState(() {
       data = documentStream['editor'];
+    });
+  }
+
+  getData2() async {
+    documentStream = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(displayName)
+        .get();
+    setState(() {
+      data2 = documentStream['admin'];
     });
   }
 
@@ -97,6 +112,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       press: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => EditorOnly()));
+                      },
+                    ),
+              !data2
+                  ? Container()
+                  : ProfileMenu(
+                      text: 'Admin Only',
+                      icon: Icons.article,
+                      press: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AdminOnly()));
                       },
                     ),
               ProfileMenu(

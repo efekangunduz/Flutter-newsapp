@@ -1,12 +1,9 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:newsapp/constants/padding_constant.dart';
-import 'package:newsapp/service/auth.dart';
+import 'package:newsapp/routes/routes.dart';
 import 'package:newsapp/service/news.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/base_view.dart';
@@ -23,8 +20,6 @@ class AddNewPhoto extends StatefulWidget {
 class _AddNewPhotoState extends State<AddNewPhoto> {
   File? addImageFile;
   File? addVideoFile;
-  String uid = auth.currentUser!.uid.toString();
-  String displayName = auth.currentUser!.displayName.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +57,8 @@ class _AddNewPhotoState extends State<AddNewPhoto> {
                         IconButton(
                           onPressed: () {
                             addVideoOnCamera(addVideoFile, widget.title);
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/home', (Route<dynamic> route) => false);
                           },
                           icon: Icon(Icons.video_camera_front),
                         ),

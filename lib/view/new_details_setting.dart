@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:newsapp/service/news.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/base_view.dart';
-import 'package:newsapp/view/editor_only.dart';
-import 'package:newsapp/view/profile.dart';
 import 'package:newsapp/view/video_player.dart';
 import 'package:newsapp/constants/padding_constant.dart';
 
@@ -38,16 +37,6 @@ class NewDetailsSetting extends StatefulWidget {
 FirebaseAuth auth = FirebaseAuth.instance;
 
 class _NewDetailsSettingState extends State<NewDetailsSetting> {
-  shareNew() async {
-    CollectionReference news = FirebaseFirestore.instance.collection('News');
-    await news.doc(widget.newTitle).update({'published': true});
-  }
-
-  deleteNew() async {
-    CollectionReference news = FirebaseFirestore.instance.collection('News');
-    await news.doc(widget.newTitle).delete();
-  }
-
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -146,17 +135,17 @@ class _NewDetailsSettingState extends State<NewDetailsSetting> {
                 IconButton(
                   icon: Icon(Icons.done),
                   onPressed: () {
-                    shareNew();
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
+                    shareNew(widget.newTitle);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/home', (Route<dynamic> route) => false);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
-                    deleteNew();
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
+                    deleteNew(widget.newTitle);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/home', (Route<dynamic> route) => false);
                   },
                 ),
               ],

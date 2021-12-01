@@ -72,3 +72,13 @@ addVideoOnCamera(addVideoFile, widgetTitle) async {
   CollectionReference news = FirebaseFirestore.instance.collection('News');
   await news.doc(widgetTitle).update({'videoUrl': url});
 }
+
+shareNew(widgetNewTitle) async {
+  CollectionReference news = FirebaseFirestore.instance.collection('News');
+  await news.doc(widgetNewTitle).update({'published': true});
+}
+
+deleteNew(widgetNewTitle) async {
+  CollectionReference news = FirebaseFirestore.instance.collection('News');
+  await news.doc(widgetNewTitle).delete();
+}

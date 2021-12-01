@@ -4,9 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:image_picker/image_picker.dart';
+import 'package:newsapp/view/profile.dart';
 import 'package:path_provider/path_provider.dart';
 
 uploadPhoto() async {
@@ -78,6 +81,7 @@ Future<void> userSetup(displayName) async {
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
   String uid = auth.currentUser!.uid.toString();
   bool editor = false;
+  bool admin = false;
   String name = '';
   String surname = '';
   String phone = '';
@@ -87,6 +91,7 @@ Future<void> userSetup(displayName) async {
     'displayName': displayName,
     'uid': uid,
     'editor': editor,
+    'admin': admin,
     'name': name,
     'surname': surname,
     'phone': phone,
@@ -96,4 +101,50 @@ Future<void> userSetup(displayName) async {
       .set(data)
       .whenComplete(() => print("Users item added to the database"))
       .catchError((e) => print(e));
+}
+
+addUserInfo(name, surname, phone) async {
+  CollectionReference users = FirebaseFirestore.instance.collection('Users');
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String displayName = auth.currentUser!.displayName.toString();
+  await users
+      .doc(displayName)
+      .update({'name': name, 'surname': surname, 'phone': phone});
+}
+
+late File addFile;
+FirebaseAuth auth = FirebaseAuth.instance;
+String? downloadUrl;
+addOnCamera() async {
+  var uploadFile = await ImagePicker().pickImage(source: ImageSource.camera);
+  addFile = File(uploadFile!.path);
+
+  Reference referencePath = FirebaseStorage.instance
+      .ref()
+      .child('profilephotos')
+      .child(auth.currentUser!.uid)
+      .child('profilPhoto.png');
+  UploadTask addTask = referencePath.putFile(addFile);
+  String url = await (await addTask).ref.getDownloadURL();
+  downloadUrl = url;
+}
+
+getPhotoUrl() async {
+  String connect = await FirebaseStorage.instance
+      .ref()
+      .child('profilephotos')
+      .child(auth.currentUser!.uid)
+      .child('profilPhoto.png')
+      .getDownloadURL();
+  downloadUrl = connect;
+}
+
+editUser(widgetNewTitle) async {
+  CollectionReference news = FirebaseFirestore.instance.collection('Users');
+  await news.doc(widgetNewTitle).update({'editor': true});
+}
+
+deleteUser(widgetNewTitle) async {
+  CollectionReference news = FirebaseFirestore.instance.collection('Users');
+  await news.doc(widgetNewTitle).delete();
 }
