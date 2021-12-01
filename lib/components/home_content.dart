@@ -90,3 +90,44 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 }
+
+
+
+
+// GestureDetector(
+//                   child: Card(
+//                 elevation: 2.0,
+//                 shape: BorderConstants.instance.radiusAllCircularLow,
+//                 child: Column(
+//                   children: <Widget>[
+//                     SizedBox(
+//                       width: 250,
+//                       height: 250,
+//                       child: Image.network(data['photoUrl']),
+//                     ),
+//                     const SizedBox(
+//                       height: 8.0,
+//                     ),
+//                     Text(
+//                       data['newTitle'],
+//                       textAlign: TextAlign.center,
+//                       style: const TextStyle(
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.w700,
+//                         fontFamily: 'Palatino',
+//                       ),
+//                     ),
+//                     Text(
+//                       data['description'],
+//                       textAlign: TextAlign.center,
+//                       style: const TextStyle(
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.w700,
+//                         fontFamily: 'Palatino',
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             );
+//           }).toList(),

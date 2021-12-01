@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:newsapp/components/comments.dart';
+import 'package:newsapp/service/news.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/base_view.dart';
 import 'package:newsapp/view/video_player.dart';
@@ -32,6 +34,9 @@ class NewDetails extends StatefulWidget {
 FirebaseAuth auth = FirebaseAuth.instance;
 
 class _NewDetailsState extends State<NewDetails> {
+  String comment = '';
+  String publishedAt = DateTime.now().toString();
+  final _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -116,39 +121,79 @@ class _NewDetailsState extends State<NewDetails> {
             style: const TextStyle(fontSize: 14),
           ),
           Form(
-            child: TextFormField(
-              keyboardType: TextInputType.multiline,
-              minLines: 2,
-              maxLines: 8,
-              maxLength: 1000,
-              decoration: InputDecoration(
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.all(0.0),
-                    child: Icon(Icons.comment, size: 40.0, color: primaryColor),
+            key: _formkey,
+            child: Column(
+              children: [
+                TextFormField(
+                    key: ValueKey('comment'),
+                    keyboardType: TextInputType.multiline,
+                    minLines: 2,
+                    maxLines: 8,
+                    maxLength: 1000,
+                    decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.all(0.0),
+                          child: Icon(Icons.comment,
+                              size: 40.0, color: primaryColor),
+                        ),
+                        hintText: "Comment",
+                        hintStyle: TextStyle(color: blackColor),
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(new Radius.circular(25.0))),
+                        labelStyle: TextStyle(color: blackColor)),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: blackColor,
+                      fontSize: 25.0,
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Empty value";
+                      }
+                    },
+                    onSaved: (value) {
+                      setState(() {
+                        comment = value!;
+                      });
+                    }),
+                TextButton(
+                  onPressed: () {
+                    if (_formkey.currentState!.validate()) {
+                      _formkey.currentState!.save();
+                    }
+                    addComment(
+                      comment: comment,
+                      newTitle: widget.newTitle,
+                      publishedAt: publishedAt,
+                    );
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/home', (Route<dynamic> route) => false);
+                  },
+                  style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      backgroundColor: primaryColor),
+                  child: Container(
+                    width: screenSize.width * 0.3,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Add Comment',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                  hintText: "Comment",
-                  hintStyle: TextStyle(color: blackColor),
-                  border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.all(new Radius.circular(25.0))),
-                  labelStyle: TextStyle(color: blackColor)),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: blackColor,
-                fontSize: 25.0,
-              ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "Empty value";
-                }
-              },
+                ),
+              ],
             ),
           ),
-          Text(
-            'widget.news.comments',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
-          ),
+          Container(
+            width: screenSize.height * 0.4,
+            height: screenSize.width * 0.8,
+            child: Comments(
+              newTitle: widget.newTitle,
+            ),
+          )
         ],
       ),
     );

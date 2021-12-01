@@ -4,10 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:newsapp/view/profile.dart';
 
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final FirebaseFirestore firestore = FirebaseFirestore.instance;
 final FirebaseAuth auth = FirebaseAuth.instance;
-final CollectionReference _mainCollection = _firestore.collection('News');
+final CollectionReference mainCollection = firestore.collection('News');
 
 Future<void> addNew({
   required String newTitle,
@@ -19,9 +20,8 @@ Future<void> addNew({
   String videoUrl = '',
   bool published = false,
 }) async {
-  String uid = auth.currentUser!.uid.toString();
   String displayName = auth.currentUser!.displayName.toString();
-  DocumentReference documentReferencer = _mainCollection.doc(newTitle);
+  DocumentReference documentReferencer = mainCollection.doc(newTitle);
 
   Map<String, dynamic> data = <String, dynamic>{
     "newTitle": newTitle,
@@ -41,6 +41,29 @@ Future<void> addNew({
       .catchError((e) => print(e));
 }
 
+Future<void> addComment({
+  required String comment,
+  required String newTitle,
+  required String publishedAt,
+}) async {
+  String displayName = auth.currentUser!.displayName.toString();
+  DocumentReference documentReferencer = mainCollection.doc(newTitle);
+  CollectionReference commentCollection =
+      documentReferencer.collection('Comments');
+
+  Map<String, dynamic> data = <String, dynamic>{
+    "displayName": displayName,
+    "publishedAt": publishedAt,
+    "comment": comment,
+  };
+
+  await commentCollection
+      .doc()
+      .set(data)
+      .whenComplete(() => print("News item added to the database"))
+      .catchError((e) => print(e));
+}
+
 String? downloadImageUrl;
 String? downloadVideoUrl;
 addImageOnCamera(addImageFile, widgetTitle) async {
@@ -54,8 +77,7 @@ addImageOnCamera(addImageFile, widgetTitle) async {
   UploadTask addTask = referencePath.putFile(addImageFile);
   String url = await (await addTask).ref.getDownloadURL();
   downloadImageUrl = url;
-  CollectionReference news = FirebaseFirestore.instance.collection('News');
-  await news.doc(widgetTitle).update({'photoUrl': url});
+  await mainCollection.doc(widgetTitle).update({'photoUrl': url});
 }
 
 addVideoOnCamera(addVideoFile, widgetTitle) async {
@@ -69,16 +91,13 @@ addVideoOnCamera(addVideoFile, widgetTitle) async {
   UploadTask addTask = referencePath.putFile(addVideoFile);
   String url = await (await addTask).ref.getDownloadURL();
   downloadVideoUrl = url;
-  CollectionReference news = FirebaseFirestore.instance.collection('News');
-  await news.doc(widgetTitle).update({'videoUrl': url});
+  await mainCollection.doc(widgetTitle).update({'videoUrl': url});
 }
 
-shareNew(widgetNewTitle) async {
-  CollectionReference news = FirebaseFirestore.instance.collection('News');
-  await news.doc(widgetNewTitle).update({'published': true});
+shareNew(widgetTitle) async {
+  await mainCollection.doc(widgetTitle).update({'published': true});
 }
 
-deleteNew(widgetNewTitle) async {
-  CollectionReference news = FirebaseFirestore.instance.collection('News');
-  await news.doc(widgetNewTitle).delete();
+deleteNew(widgetTitle) async {
+  await mainCollection.doc(widgetTitle).delete();
 }
