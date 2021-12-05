@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newsapp/components/newDialogWidget.dart';
 import 'package:newsapp/service/news.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/add_new_photo.dart';
@@ -12,6 +13,9 @@ class _AddNewFormState extends State<AddNewForm> {
   String details = '';
   String description = '';
   String source = '';
+  String _boxTitle = 'Hata !';
+  String _errorMessage = 'Hatali Giris';
+  String _buttonMessage = 'Ok';
   String publishedAt = DateTime.now().toString();
 
   final _formkey = GlobalKey<FormState>();
@@ -132,15 +136,18 @@ class _AddNewFormState extends State<AddNewForm> {
                 onPressed: () {
                   if (_formkey.currentState!.validate()) {
                     _formkey.currentState!.save();
+                    addNew(
+                        description: description,
+                        details: details,
+                        newTitle: newTitle,
+                        publishedAt: publishedAt,
+                        source: source);
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => AddNewPhoto(title: newTitle)));
+                  } else {
+                    showMyDialog(
+                        context, _boxTitle, _errorMessage, _buttonMessage);
                   }
-                  addNew(
-                      description: description,
-                      details: details,
-                      newTitle: newTitle,
-                      publishedAt: publishedAt,
-                      source: source);
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => AddNewPhoto(title: newTitle)));
                 },
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(

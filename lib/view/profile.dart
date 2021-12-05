@@ -17,7 +17,7 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-String displayName = auth.currentUser!.displayName.toString();
+String? displayName = auth.currentUser!.displayName;
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool data = false;
@@ -27,7 +27,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       getData();
-      getData2();
     });
   }
 
@@ -38,16 +37,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .get();
     setState(() {
       data = documentStream['editor'];
-    });
-  }
-
-  getData2() async {
-    documentStream = await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(displayName)
-        .get();
-    setState(() {
       data2 = documentStream['admin'];
+      print(data);
+      print(data2);
     });
   }
 
@@ -108,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ? Container()
                   : ProfileMenu(
                       text: 'Editor Only',
-                      icon: Icons.article,
+                      icon: Icons.edit,
                       press: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => EditorOnly()));
@@ -118,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ? Container()
                   : ProfileMenu(
                       text: 'Admin Only',
-                      icon: Icons.article,
+                      icon: Icons.admin_panel_settings,
                       press: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => AdminOnly()));

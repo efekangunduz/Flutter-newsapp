@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:newsapp/components/newDialogWidget.dart';
 import 'package:newsapp/service/auth.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 
@@ -15,6 +16,9 @@ class _AccountFormState extends State<AccountForm> {
   String name = '';
   String surname = '';
   String phone = '';
+  String _boxTitle = 'Hata !';
+  String _errorMessage = 'Hatali Giris';
+  String _buttonMessage = 'Ok';
 
   final _formkey = GlobalKey<FormState>();
   @override
@@ -105,6 +109,9 @@ class _AccountFormState extends State<AccountForm> {
                     addUserInfo(name, surname, phone);
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         '/home', (Route<dynamic> route) => false);
+                  } else {
+                    showMyDialog(
+                        context, _boxTitle, _errorMessage, _buttonMessage);
                   }
                 },
                 style: TextButton.styleFrom(

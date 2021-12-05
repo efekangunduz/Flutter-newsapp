@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:newsapp/components/comments.dart';
+import 'package:newsapp/components/newDialogWidget.dart';
 import 'package:newsapp/service/news.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/base_view.dart';
@@ -37,6 +38,12 @@ class _NewDetailsState extends State<NewDetails> {
   String comment = '';
   String publishedAt = DateTime.now().toString();
   final _formkey = GlobalKey<FormState>();
+
+  String buttonMessage = 'Ok';
+
+  String errorMessage = 'Lütfen yorum giriniz.';
+
+  String boxTitle = 'Hata !';
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -161,14 +168,17 @@ class _NewDetailsState extends State<NewDetails> {
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
                       _formkey.currentState!.save();
+                      addComment(
+                        comment: comment,
+                        newTitle: widget.newTitle,
+                        publishedAt: publishedAt,
+                      );
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/home', (Route<dynamic> route) => false);
+                    } else {
+                      showMyDialog(
+                          context, boxTitle, errorMessage, buttonMessage);
                     }
-                    addComment(
-                      comment: comment,
-                      newTitle: widget.newTitle,
-                      publishedAt: publishedAt,
-                    );
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/home', (Route<dynamic> route) => false);
                   },
                   style: TextButton.styleFrom(
                       shape: RoundedRectangleBorder(

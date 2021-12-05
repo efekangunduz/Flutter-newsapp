@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:newsapp/components/newDialogWidget.dart';
 import 'package:newsapp/service/auth.dart';
 import 'package:newsapp/styles/custom_theme.dart';
 import 'package:newsapp/view/home.dart';
@@ -16,6 +17,9 @@ class _RegisterFormState extends State<RegisterForm> {
   String password = '';
   String username = '';
   bool isLogin = false;
+  String _boxTitle = 'Hata !';
+  String _errorMessage = 'Hatali Giris';
+  String _buttonMessage = 'Ok';
 
   final _formkey = GlobalKey<FormState>();
 
@@ -120,6 +124,9 @@ class _RegisterFormState extends State<RegisterForm> {
                             builder: (context) => MyHomePage()));
                       }
                     });
+                  } else {
+                    showMyDialog(
+                        context, _boxTitle, _errorMessage, _buttonMessage);
                   }
                 },
                 style: TextButton.styleFrom(

@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:newsapp/constants/border_constant.dart';
 import 'package:newsapp/view/editor_settings.dart';
-import 'package:newsapp/view/new_details_setting.dart';
 
 class AdminOnlyContent extends StatefulWidget {
   @override
